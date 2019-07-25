@@ -10,7 +10,6 @@ function ogit.new(o)
     repo = "",
     branch = "master"
   }
- 
   setmetatable(o, ogit)
   return o
 end
@@ -38,13 +37,12 @@ function ogit:download(wFile, lFile)
 end
  
 local args = shell.parse(...)
-print(#args)
  
 if #args > 0 then
   if args[1] == "get" then
     local g = ogit.new()
     if #args < 3 then
-      g:config(os.getenv("GIT-USER"), os.getenv("GIT-REPO"), os.getenv("GIT-BRH"))
+      g:config(os.getenv("OGIT-USR"), os.getenv("OGIT-REP"), os.getenv("OGIT-BRH"))
       g:download(args[2])
     else
       g:config(args[2], args[3], args[4])
@@ -52,24 +50,23 @@ if #args > 0 then
     end
   elseif args[1] == "config" then
     if #args > 1 then
-      os.setenv("GIT-USER", args[2] or "")
-      os.setenv("GIT-REPO", args[3] or "")
-      os.setenv("GIT-BRH", args[4] or "master")
+      os.setenv("OGIT-USR", args[2] or "")
+      os.setenv("OGIT-REP", args[3] or "")
+      os.setenv("OGIT-BRH", args[4] or "master")
     else
-      io.write("User: " .. os.getenv("GIT-USER") ..
-               "\nRepository: " .. os.getenv("GIT-REPO") ..
-               "\nBranch: " .. os.getenv("GIT-BRH"))
+      io.write("User: " .. os.getenv("OGIT-USR") ..
+               "\nRepository: " .. os.getenv("OGIT-REP") ..
+               "\nBranch: " .. os.getenv("OGIT-BRH"))
     end
   else
     io.stderr:write('ogit: Invalid argument!')
   end
 else
   io.write("List of commands:")
-  io.write("\n\tgit get <file>")
-  io.write("\n\tgit get <user> <repo> <branch> <file>")
-  io.write("\n\tgit config")
-  io.write("\n\tgit config <user> <repo> <branch>")
-  print("A")
+  io.write("\n\togit config")
+  io.write("\n\togit config <user> <repo> <branch>")
+  io.write("\n\togit get <file>")
+  io.write("\n\togit get <user> <repo> <branch> <file>")
 end
  
 return ogit
