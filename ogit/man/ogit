@@ -1,0 +1,27 @@
+Opengit commands:
+
+    ogit 
+        Shows a list of commands for Opengit.
+        
+        It will download the manual from eGlint's Opengit repository if it does not exist.
+
+    ogit config
+        Shows the current user, repository and branch.
+
+    ogit config <user> <repo> <branch>
+        Sets the user, repository and branch.
+
+    ogit get <file>
+        Downloads the target file from the configured repository.
+
+    ogit get <user> <repo> <branch> <file>
+        Downloads the target file from the specificed repository.
+
+    ogit run <file>
+        Downloads the target file and runs it. 
+
+    ogit update (NOT IMPLEMENTED YET)
+        Updates ogit to the latest version based from eGlint's Opengit repository.
+
+    ogit disk <target disk> (NOT IMPLEMENTED YET)
+        Turns target disk into an Opengit disk.

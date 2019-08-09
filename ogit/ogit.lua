@@ -1,5 +1,6 @@
 shell = require 'shell'
- 
+fs = require 'filesystem'
+
 ogit = {}
 ogit.__index = ogit
  
@@ -35,14 +36,14 @@ function ogit:download(wFile, lFile)
     return
   end
 end
- 
+
 local args = shell.parse(...)
- 
+
 if #args > 0 then
   if args[1] == "get" then
     local g = ogit.new()
     if #args < 3 then
-      g:config(os.getenv("OGIT-USR"), os.getenv("OGIT-REP"), os.getenv("OGIT-BRH"))
+      g:config(os.getenv('OGIT-USR'), os.getenv('OGIT-REP'), os.getenv('OGIT-BRH'))
       g:download(args[2])
     else
       g:config(args[2], args[3], args[4])
@@ -50,23 +51,43 @@ if #args > 0 then
     end
   elseif args[1] == "config" then
     if #args > 1 then
-      os.setenv("OGIT-USR", args[2] or "")
-      os.setenv("OGIT-REP", args[3] or "")
-      os.setenv("OGIT-BRH", args[4] or "master")
+      os.setenv('OGIT-USR', args[2] or "")
+      os.setenv('OGIT-REP', args[3] or "")
+      os.setenv('OGIT-BRH', args[4] or "master")
     else
-      io.write("User: " .. os.getenv("OGIT-USR") ..
-               "\nRepository: " .. os.getenv("OGIT-REP") ..
-               "\nBranch: " .. os.getenv("OGIT-BRH"))
+      io.write("User: " .. os.getenv('OGIT-USR') or '(not set)' ..
+               "\nRepository: " .. os.getenv('OGIT-REP') or '(not set)' ..
+               "\nBranch: " .. os.getenv('OGIT-BRH') or '(not set)')
     end
+  elseif args[1] == "run" then 
+    local g = ogit.new()
+    local tmp = '/tmp/' .. args[2]
+    g:config(os.getenv('OGIT-USR'), os.getenv('OGIT-REP'), os.getenv('OGIT-BRH'))
+    g:download(args[2], tmp)
+    if (fs.exists(tmp)) then
+      shell.execute(tmp .. ' ' .. args[3] )
+    end
+  elseif args[1] == "update" then 
+    io.write("To be added in the later version")
+  elseif args[1] == "disk" then 
+    io.write("To be added in the later version")
   else
     io.stderr:write('ogit: Invalid argument!')
   end
 else
-  io.write("List of commands:")
-  io.write("\n\togit config")
-  io.write("\n\togit config <user> <repo> <branch>")
-  io.write("\n\togit get <file>")
-  io.write("\n\togit get <user> <repo> <branch> <file>")
+  if (fs.exists(os.getenv('MANPATH') .. 'ogit')) then
+    shell.execute("man ogit")
+  else 
+    io.write('Manual not available, downloading a copy...')
+    local g = ogit.new()
+    g:config("eGlint", "ocglint", "master")
+    g:download('ogit/man/ogit', os.getenv('MANPATH') .. "/ogit")
+    if (fs.exists(os.getenv('MANPATH') .. 'ogit')) then 
+      shell.execute("man ogit")
+    else 
+      io.stderr:write("Downloading manual failed!")
+    end
+  end
 end
  
 return ogit

@@ -11,7 +11,6 @@ function Hello.new(o)
 end
 
 function Hello:display()
-    self.message = "HW!"
     print (self.message)
 end
 
